@@ -1,11 +1,16 @@
 import { BaseAsyncMessenger, type BaseReqData, type GlobalReqOptions } from "async-messenger-js";
 import { EnumActionType } from "./index.types";
 
-const vscode = typeof acquireVsCodeApi === "function" ? acquireVsCodeApi() : window;
+const isInVScode = typeof acquireVsCodeApi === "function";
+const vscode = isInVScode ? acquireVsCodeApi() : window.parent;
+const mDomain = isInVScode ? "*" : "https://web.com";
 
 function postMessageToVSCode(msg: any) {
     // console.log("webview post message to vs:", msg);
     // const vscode = acquireVsCodeApi();
+
+    msg.source = isInVScode ? "VSCodePage" : "IframePage";
+
     vscode.postMessage(msg, "*");
 }
 
@@ -32,12 +37,6 @@ class AsyncMessenger extends BaseAsyncMessenger {
     protected request(data: RequestData) {
         console.log("send message to vscode:", data);
         postMessageToVSCode(data);
-    }
-
-    private invokeOnly = (data: RequestData) => {
-        return this.invoke(data, {
-            sendOnly: true
-        })
     }
 
     /**

@@ -17,8 +17,8 @@
             <n-checkbox size="medium" label="启用翻译" v-model:checked="model.enableTranslation" :checked-value="true"
                 :disabled="!isValidUrl" />
         </n-form-item>
-        <n-form-item label="下载目录" path="type">
-            <n-input placeholder="请输入下载目录" :disabled="!isValidUrl"></n-input>
+        <n-form-item label="下载目录" path="targetFolder">
+            <n-input placeholder="请输入下载目录" :disabled="!isValidUrl" v-model:value="model.targetFolder"></n-input>
         </n-form-item>
 
         <n-form-item>
@@ -130,8 +130,17 @@ function onToDownload() {
     }
 }
 
-onMounted(() => {
-    asyncMessenger.getConfig().then(res => console.log("getConfig:res", res))
+onMounted(async () => {
+
+    try {
+        const res = await asyncMessenger.getConfig();
+        console.log("getConfig:", res);
+        model.targetFolder = res?.data?.targetFolder;
+
+    } catch (err: any) {
+        message.error("onMounted error:", err && err.message);
+    }
+
 })
 
 
