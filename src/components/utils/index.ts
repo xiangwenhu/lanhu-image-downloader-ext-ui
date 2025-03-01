@@ -30,7 +30,7 @@ export function getTypeByUrl(urlValue: string): EnumUrlType {
 }
 
 export function getDownloadParamsByUrl(urlValue: string, config: {
-    teamId: string
+    teamId?: string
 }): ConfigParamsInformation<EnumUrlType> {
 
     const url = urlValue.toLowerCase();

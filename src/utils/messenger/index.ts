@@ -1,5 +1,6 @@
 import { BaseAsyncMessenger, type BaseReqData, type GlobalReqOptions } from "async-messenger-js";
 import { EnumActionType } from "./index.types";
+import type { DownloadOptions } from "@/types";
 
 const isInVScode = typeof acquireVsCodeApi === "function";
 const vscode = isInVScode ? acquireVsCodeApi() : window.parent;
@@ -42,14 +43,18 @@ class AsyncMessenger extends BaseAsyncMessenger {
     /**
      * 开始下载
      */
-    startDownload() {
+    startDownload(data: DownloadOptions) {
         this.invoke({
-            type: EnumActionType.StartDownload
+            type: EnumActionType.StartDownload,
+            data
         })
     }
 
     getConfig() {
-        return this.invoke({
+        return this.invoke<unknown, {
+            targetFolder: string;
+            teamId?: string;
+        }>({
             type: EnumActionType.GetConfig
         })
     }
