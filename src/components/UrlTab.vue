@@ -9,8 +9,14 @@
     <n-form-item label="分组组名" path="sectorName" v-if="model.type === EnumUrlType.sector">
       <n-input v-model:value="model.sectorName" placeholder="请输入分组组名" :disabled="!isValidUrl"></n-input>
     </n-form-item>
+    <n-form-item label="图片格式">
+      <CutImageStyle v-model:value="model.cutImageStyle" placeholder="请选择图片格式" :disabled="!isValidUrl"></CutImageStyle>
+    </n-form-item>
+    <n-form-item label="使用平台">
+      <Platform v-model:value="model.platform" placeholder="请选择使用平台" :disabled="!isValidUrl"></Platform>
+    </n-form-item>
     <n-form-item label="图片尺寸">
-      <download-scale v-model:value="model.downloadScale" placeholder="请选择图片大小"></download-scale>
+      <download-scale :platform="model.platform" v-model:value="model.downloadScale" placeholder="请选择图片大小" :disabled="!isValidUrl"></download-scale>
     </n-form-item>
     <!-- <n-form-item label="调整尺寸" path="resizeScale">
       <n-input-number
@@ -46,24 +52,27 @@
 </template>
 
 <script setup lang="ts">
-import { type FormInst, type FormRules, NForm, NFormItem, NInput, NInputNumber, NCheckbox, useMessage, NButton, NSpace, NPopconfirm } from "naive-ui";
+import { type FormInst, type FormRules, NForm, NFormItem, NInput, NCheckbox, useMessage, NButton, NSpace, NPopconfirm } from "naive-ui";
 import { reactive, ref, watch, onMounted } from "vue";
-import type { ModelType } from "./UrlTab.type";
+import type { IFormData } from "./UrlTab.type";
 import DownloadType from "./select/DownloadType.vue";
 import DownloadScale from "./select/DownloadScale.vue";
-import { type ConfigParamsInformation, EnumUrlType, type DownloadOptions } from "../types";
+import CutImageStyle from "./select/CutImageStyle.vue";
+import Platform from "./select/Platform.vue";
+import { type ConfigParamsInformation, EnumUrlType, type DownloadOptions, EnumTargetPlatform } from "../types";
 import { getDownloadParamsByUrl } from "./utils/index";
 import asyncMessenger from "../utils/messenger/index";
 const message = useMessage()
 
-const model = reactive<ModelType>({
+const model = reactive<IFormData>({
   url: "",
   type: undefined,
   sectorName: "",
   downloadScale: 1,
-  resizeScale: 1,
+  cutImageStyle: "png",
   enableTranslation: false,
-  targetFolder: ""
+  targetFolder: "",
+  platform: EnumTargetPlatform.Web
 });
 
 const refForm = ref<FormInst | null>(null);
@@ -130,14 +139,12 @@ function getSubmitData(): DownloadOptions {
      */
     downloadScale: model.downloadScale,
     /**
-     * 下载后重新调整图片的大小，一般选择缩小
-     */
-    resizeScale: model.resizeScale || 1,
-    /**
      * 启用中专英文
      */
     enableTranslation: model.enableTranslation,
-    sectorName: model.sectorName
+    sectorName: model.sectorName,
+
+    cutImageStyle: model.cutImageStyle
   } as DownloadOptions
 }
 

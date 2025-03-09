@@ -5,6 +5,20 @@ export enum EnumUrlType {
     unknown = 4
 }
 
+export enum EnumCutImageStyle {
+    PNG = 'png',
+    JPG = 'jpg',
+    WebP = 'webp',
+    SVG = 'svg',
+    PDF = 'pdf'
+}
+
+export enum EnumTargetPlatform {
+    IOS = 1,
+    Android = 2,
+    Web = 3,
+}
+
 export type ParamsMap = {
     [EnumUrlType.project]: {
         tid: string;
@@ -37,11 +51,6 @@ export interface ConfigParamsInformation<T extends EnumUrlType> {
 }
 
 
-export enum EnumDownloadScale {
-    default = 1,
-    double = 2
-}
-
 export interface DownloadOptions {
     sectorName?: string;
     type: EnumUrlType;
@@ -49,11 +58,7 @@ export interface DownloadOptions {
     /**
      * 下载的图片的切图大小， 1 | 2倍尺寸
      */
-    downloadScale?: EnumDownloadScale;
-    /**
-     * 下载后重新调整图片的大小，一般选择缩小
-     */
-    resizeScale?: number;
+    downloadScale?: number;
     /**
      * 启用中专英文
      */
@@ -64,6 +69,8 @@ export interface DownloadOptions {
     teamId: string;
 
     imageId?: string;
+
+    cutImageStyle?: EnumCutImageStyle;
 }
 
 

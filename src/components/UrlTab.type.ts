@@ -1,11 +1,12 @@
-import type { EnumUrlType } from "@/types";
+import type { EnumTargetPlatform, EnumUrlType } from "@/types";
 
-export interface ModelType {
+export interface IFormData {
     url: string;
     type: EnumUrlType | undefined;
     sectorName?: string;
-    downloadScale: 1 | 2;
-    resizeScale?: number;
+    cutImageStyle: string;
+    downloadScale: number;
     enableTranslation: boolean;
     targetFolder: string;
+    platform: EnumTargetPlatform;
 }
