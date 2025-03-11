@@ -1,4 +1,4 @@
-import { BaseAsyncMessenger, type BaseReqData, type GlobalReqOptions } from "async-messenger-js";
+import { BaseAsyncMessenger, type BaseReqData, type BaseResData, type GlobalReqOptions } from "async-messenger-js";
 import { EnumActionType } from "./index.types";
 import type { DownloadOptions } from "@/types";
 
@@ -50,11 +50,11 @@ class AsyncMessenger extends BaseAsyncMessenger {
         })
     }
 
-    getConfig() {
-        return this.invoke<unknown, {
-            targetFolder: string;
-            teamId?: string;
-        }>({
+    getConfig(): Promise<BaseResData<{
+        targetFolder: string;
+        teamId?: string;
+    }>> {
+        return this.invoke<unknown>({
             type: EnumActionType.GetConfig
         })
     }

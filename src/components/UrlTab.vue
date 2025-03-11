@@ -16,7 +16,8 @@
       <Platform v-model:value="model.platform" placeholder="请选择使用平台" :disabled="!isValidUrl"></Platform>
     </n-form-item>
     <n-form-item label="图片尺寸">
-      <download-scale :platform="model.platform" v-model:value="model.downloadScale" placeholder="请选择图片大小" :disabled="!isValidUrl"></download-scale>
+      <download-scale :platform="model.platform" v-model:value="model.downloadScale" placeholder="请选择图片大小"
+        :disabled="!isValidUrl"></download-scale>
     </n-form-item>
     <!-- <n-form-item label="调整尺寸" path="resizeScale">
       <n-input-number
@@ -172,18 +173,21 @@ function onToDownload() {
 }
 
 onMounted(async () => {
-
   try {
     const res = await asyncMessenger.getConfig();
     console.log("getConfig:", res);
     model.targetFolder = res?.data?.targetFolder || "";
-
     lanhuConfig.teamId = res?.data?.teamId;
 
   } catch (err: any) {
     message.error("onMounted error:", err && err.message);
   }
+})
 
+watch(() => model.platform, function (newVal, oldVal) {
+  if (newVal != oldVal) {
+    model.downloadScale = 1
+  }
 })
 </script>
 
